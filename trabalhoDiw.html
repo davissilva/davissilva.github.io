@@ -1,0 +1,112 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+
+        var url = 'https://api.spotify.com';
+
+        function addLista(id, nome, idPage){
+          $(idPage).append($('<option>', {
+            value: id,
+              text: nome
+          }));
+        }
+
+
+
+        function executaMusica(){}
+
+        function executaAlbum(obj) {
+
+          $('#idAlbum option').remove();
+
+            var id= obj.value;
+
+            var link = "https://api.spotify.com/v1/artists/"+ id +"/albums";
+            $.ajax({
+               url: link,
+               type:'GET',
+               headers: {
+
+                 'Content-Type':'application/json',
+                 'Accept':'application/json',
+                  'Authorization': 'Bearer BQC2kartQechwqnEugrPZkazHWU_KlP180AzbBRqNLAIiHSSPYYowjFAR9sDw6wTjW1LDwl5EldEUO1sEJIbv1tmBbPoZwdM5a99oeRLj7ySoBsJ9r5miUTNw05VmZbj_konnmvFHyfUdfLfc22sfHpI9ZUzptLehU8RK5mpQuPAiCf3PmMEuTJpNqERUwRYWlTZB2m4mZNaLV4Z1LgYdRMtM9vULeWkJqZX22xRy9CGDulqGJs2xE7F-t0fRf823X5do_NfQU2bZE47LXyuuaiIkW3T8ejVWjQeq-VIjvE_6UPBIB6a_i5UIMFS3ubetjHD5tJwXTp12ATiqoORjA'
+
+               },
+               success: function(response) {
+
+     console.log(response);
+                 var dados = response;
+                 var strSaida = '';
+
+               for (i = 0; i < dados.items.length; i++) {
+                  // strSaida += 'Artista: '+ dados.artists.items[i].name +  '<br>';
+                   addLista(dados.items[i].id,dados.items[i].name,"#idAlbum");
+               }
+               document.getElementById('idAlbum').style.display="block";
+              // $('#conteudo').html('<p>Total de Musicas: ' + dados.artists.items.length + '</p>' +
+              //     strSaida);
+
+
+
+               }
+
+        });}
+
+        function executaConsulta() {
+            $('#idArtistas option').remove();
+            var query = $('#query').val();
+            var link = "https://api.spotify.com/v1/search?q="+ query + "&type=artist";
+            $.ajax({
+               url: link,
+               type:'GET',
+               headers: {
+
+                 'Content-Type':'application/json',
+                 'Accept':'application/json',
+                  'Authorization': 'Bearer BQC2kartQechwqnEugrPZkazHWU_KlP180AzbBRqNLAIiHSSPYYowjFAR9sDw6wTjW1LDwl5EldEUO1sEJIbv1tmBbPoZwdM5a99oeRLj7ySoBsJ9r5miUTNw05VmZbj_konnmvFHyfUdfLfc22sfHpI9ZUzptLehU8RK5mpQuPAiCf3PmMEuTJpNqERUwRYWlTZB2m4mZNaLV4Z1LgYdRMtM9vULeWkJqZX22xRy9CGDulqGJs2xE7F-t0fRf823X5do_NfQU2bZE47LXyuuaiIkW3T8ejVWjQeq-VIjvE_6UPBIB6a_i5UIMFS3ubetjHD5tJwXTp12ATiqoORjA'
+
+               },
+               success: function(response) {
+
+                 var dados = response;
+                 var strSaida = '';
+
+               for (i = 0; i < dados.artists.items.length; i++) {
+                  // strSaida += 'Artista: '+ dados.artists.items[i].name +  '<br>';
+                     addLista(dados.artists.items[i].id,dados.artists.items[i].name,"#idArtistas");
+               }
+               document.getElementById('idArtistas').style.display="block";
+              // $('#conteudo').html('<p>Total de Musicas: ' + dados.artists.items.length + '</p>' +
+              //     strSaida);
+
+
+                   console.log(response);
+               }
+
+        });}
+
+
+    </script>
+    <title>Document</title>
+    <style>
+        #topo,
+        #rodape {
+            background-color: Yellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="topo"> Rommel Music </div>
+    <div id="conteudo"></div>
+    <input type="text" id="query">  <button onclick="executaConsulta()">Consulta</button>
+    <select id="idArtistas" style="display:none" onchange="executaAlbum(this)" ><option value="0">--SELECIONE--</select>
+    <select id="idAlbum" style="display:none" ><option value="0">--SELECIONE--</select>
+
+    <div id="rodape">Copyright 2017</div>
+</body>
+
+</html>
